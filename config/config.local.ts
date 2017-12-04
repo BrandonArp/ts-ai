@@ -1,5 +1,6 @@
 import * as Config from "webpack-chain";
 
+import path = require("path");
 import * as CommonConfig from "./config.common";
 import { EnvOptions } from "./types";
 
@@ -11,8 +12,7 @@ function webpackConfig(options: EnvOptions = {}): Config {
   // it makes for much easier debugging:
   // (make sure you symlink the dir, not the files)
   // `# ln -s /path/to/local/deploy/dir ./dist/local`
-  const localPath = "/home/USER_NAME/.config/Screeps/scripts/127_0_0_1___21025/default/";
-  config.output.path(localPath);
+  config.output.path(path.resolve("./dist/local"));
 
   // modify the args of "define" plugin
   config.plugin("define").tap((args: any[]) => {

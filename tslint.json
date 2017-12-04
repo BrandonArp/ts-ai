@@ -11,6 +11,7 @@
       true,
       "never"
     ],
+    "no-bitwise": false,
     "variable-name": [
       true,
       "ban-keywords",

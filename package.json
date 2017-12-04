@@ -25,6 +25,7 @@
     "clean-webpack-plugin": "^0.1.16",
     "fork-ts-checker-webpack-plugin": "^0.2.8",
     "git-rev-sync": "^1.9.1",
+    "path": "^0.12.7",
     "screeps-webpack-plugin": "git://github.com/langri-sha/screeps-webpack-plugin.git",
     "source-map-loader": "^0.2.1",
     "ts-loader": "^3.1.0",

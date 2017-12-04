@@ -3,6 +3,7 @@ interface CreepMemory {
   role: string;
   room: string;
   working: boolean;
+  task: string;
 }
 
 // add objects to `global` here
