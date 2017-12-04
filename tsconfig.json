@@ -20,7 +20,8 @@
     "config/*.ts",
     "libs/*.ts",
     "src/**/*.ts",
-    "src/**/*.d.ts"
+    "src/**/*.d.ts",
+    "node_modules/typed-screeps/dist/screeps.d.ts"
   ],
   "exclude": [
     "dist",

@@ -3,8 +3,9 @@ import * as Config from "../../config/config";
 import * as builder from "./roles/builder";
 import * as harvester from "./roles/harvester";
 import * as worker from "./roles/worker";
+import * as architect from "./architect";
 
-import { log } from "lib/logger/log";
+import { log } from "../../lib/logger/log";
 
 /**
  * Initialization scripts for CreepManager module.
@@ -21,6 +22,8 @@ export function run(room: Room): void {
   }
 
   _buildMissingCreeps(room, creeps);
+
+  architect.plan(room);
 
   _.each(creeps, (creep: Creep) => {
     if (creep.memory.role === "harvester") {
@@ -158,6 +161,7 @@ function _spawnCreep(spawn: Spawn, bodyParts: BodyPartConstant[], role: string) 
   const properties: CreepMemory = {
     role,
     room: spawn.room.name,
+    target: null,
     task: "",
     working: false
   };

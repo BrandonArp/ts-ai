@@ -4,6 +4,7 @@ interface CreepMemory {
   room: string;
   working: boolean;
   task: string;
+  target: any;
 }
 
 // add objects to `global` here
