@@ -1,5 +1,4 @@
 export function plan(room: Room) {
-  const controller = room.controller;
   const energySources = room.find<Source>(FIND_SOURCES_ACTIVE);
   const spawn = room.find<Spawn>(FIND_MY_SPAWNS)[0];
   const constructionSites = room.find<ConstructionSite>(FIND_MY_CONSTRUCTION_SITES);
@@ -10,9 +9,7 @@ export function plan(room: Room) {
   if (energySources.length > 0) {
     // Look at the paths between the spawn and the energy sources.
     _.each(energySources, (source) => {
-      const path: PathStep[] = room.findPath(spawn.pos, source.pos, {ignoreCreeps: true, ignoreRoads: true, costCallback: (room, cost) => {
-        return false;
-        }});
+      const path: PathStep[] = room.findPath(spawn.pos, source.pos, {ignoreCreeps: false, ignoreRoads: false});
       _.each(path, (step) => {
         const structures = room.lookForAt(LOOK_STRUCTURES, step.x, step.y);
         if (step.x === source.pos.x && step.y === source.pos.y) {
@@ -26,8 +23,9 @@ export function plan(room: Room) {
     });
   }
 
+  const controller = room.controller;
   if (controller) {
-    const path: PathStep[] = room.findPath(spawn.pos, controller.pos, {ignoreCreeps: true});
+    const path: PathStep[] = room.findPath(spawn.pos, controller.pos, {ignoreCreeps: false, ignoreRoads: false});
     _.each(path, (step) => {
       const structures = room.lookForAt(LOOK_STRUCTURES, step.x, step.y);
       // console.log("structures", structures.length);
