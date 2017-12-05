@@ -33,21 +33,23 @@ export function run(creep: Creep): void {
   if (task === Task.renew) {
     creepActions.moveToRenew(creep, spawn);
     if (creep.ticksToLive > 1000 ||
-      (spawn.energy < 10 && creep.ticksToLive > (Config.DEFAULT_MIN_LIFE_BEFORE_NEEDS_REFILL * 2))) {
+      (spawn.energy < 30 && creep.ticksToLive > Config.DEFAULT_MIN_LIFE_BEFORE_STOP_REFILL)) {
       task = "";
     }
   } else if (task === Task.acquireEnergy) {
-    // Go get resources from the spawn
-    _moveToEnergyWithdraw(creep, spawn);
+    const sources = creep.room.find<Source>(FIND_SOURCES_ACTIVE).sort(closenessComparitor(creep.pos));
+
+    if (sources.length > 0 && distanceApprox(sources[0].pos, creep.pos) < distanceApprox(spawn.pos, creep.pos)) {
+      _moveToHarvest(creep, sources[0]);
+    } else {
+      // Go get resources from the spawn
+      _moveToEnergyWithdraw(creep, spawn);
+    }
     if (_.sum(creep.carry) === creep.carryCapacity) {
       task = "";
     }
   } else if (task === Task.build) {
-    const constructionSites = allSites.sort((a, b) => {
-      const distToA = distanceApprox(a.pos, creep.pos);
-      const distToB = distanceApprox(b.pos, creep.pos);
-      return distToA < distToB ? -1 : 1;
-    });
+    const constructionSites = allSites.sort(closenessComparitor(creep.pos));
     const target = constructionSites[0];
     _moveToBuild(creep, target);
     if (creep.carry.energy === 0) {
@@ -71,6 +73,14 @@ function _tryBuild(creep: Creep, target: ConstructionSite): number {
   return creep.build(target);
 }
 
+function closenessComparitor(source: RoomPosition): (a: RoomObject, b: RoomObject) => number {
+  return (a, b) => {
+      const distToA = distanceApprox(a.pos, source);
+      const distToB = distanceApprox(b.pos, source);
+      return distToA < distToB ? -1 : 1;
+    }
+}
+
 function _moveToBuild(creep: Creep, target: ConstructionSite): void {
   const buildResult = _tryBuild(creep, target);
   if (buildResult === OK) {
@@ -88,6 +98,16 @@ function _tryEnergyWithdraw(creep: Creep, target: Spawn | Structure): number {
 
 function _moveToEnergyWithdraw(creep: Creep, target: Spawn | Structure): void {
   if (_tryEnergyWithdraw(creep, target) === ERR_NOT_IN_RANGE) {
+    creepActions.moveTo(creep, target.pos);
+  }
+}
+
+function _tryHarvest(creep: Creep, target: Source): number {
+  return creep.harvest(target);
+}
+
+function _moveToHarvest(creep: Creep, target: Source): void {
+  if (_tryHarvest(creep, target) === ERR_NOT_IN_RANGE) {
     creepActions.moveTo(creep, target.pos);
   }
 }

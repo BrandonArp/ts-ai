@@ -7,6 +7,10 @@ interface CreepMemory {
   target: any;
 }
 
+interface RoomMemory {
+  walk: number[][];
+}
+
 // add objects to `global` here
 declare namespace NodeJS {
   interface Global {

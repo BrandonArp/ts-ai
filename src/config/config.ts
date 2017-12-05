@@ -17,6 +17,8 @@ export const USE_PROFILER: boolean = true;
  */
 export const DEFAULT_MIN_LIFE_BEFORE_NEEDS_REFILL: number = 250;
 
+export const DEFAULT_MIN_LIFE_BEFORE_STOP_REFILL: number = 500;
+
 /**
  * Debug level for log output
  */

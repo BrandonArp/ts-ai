@@ -10,7 +10,9 @@ export function plan(room: Room) {
   if (energySources.length > 0) {
     // Look at the paths between the spawn and the energy sources.
     _.each(energySources, (source) => {
-      const path: PathStep[] = room.findPath(spawn.pos, source.pos, {ignoreCreeps: true});
+      const path: PathStep[] = room.findPath(spawn.pos, source.pos, {ignoreCreeps: true, ignoreRoads: true, costCallback: (room, cost) => {
+        return false;
+        }});
       _.each(path, (step) => {
         const structures = room.lookForAt(LOOK_STRUCTURES, step.x, step.y);
         if (step.x === source.pos.x && step.y === source.pos.y) {
@@ -38,5 +40,25 @@ export function plan(room: Room) {
     });
   } else {
     console.log("No controller to build a road to?");
+  }
+
+  let highest = 0;
+  let highestPos: {x: number, y: number} | null = null;
+  // Decay all the walk entries
+  if (Game.time % 25 === 0) {
+    for (let x = 0; x < 50; x++) {
+      for (let y = 0; y < 50; y++) {
+        room.memory.walk[x][y] *= 0.8;
+        if (room.memory.walk[x][y] > highest && room.lookForAt(LOOK_STRUCTURES, x, y).length === 0) {
+          highest = room.memory.walk[x][y];
+          highestPos = {x: x, y: y};
+        }
+      }
+    }
+  }
+
+  if (pending < maxPlanned && highest > 10 && highestPos != null) {
+    console.log("building additional road at highest traveled, highest: ", highest);
+    room.createConstructionSite(highestPos.x, highestPos.y, STRUCTURE_ROAD);
   }
 }

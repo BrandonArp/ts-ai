@@ -32,15 +32,17 @@ export function run(creep: Creep): void {
     }
   }
 
-  const structures = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos.x, creep.pos.y);
-  if (structures.length === 0) {
-    creep.room.createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_ROAD);
-  }
+  // const structures = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos.x, creep.pos.y);
+  // if (structures.length === 0) {
+  //   creep.room.createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_ROAD);
+  // }
+
+  creepActions.registerWalk(creep);
 
   if (task === Task.renew) {
     creepActions.moveToRenew(creep, spawn);
     if (creep.ticksToLive > 1000 ||
-      (spawn.energy < 10 && creep.ticksToLive > (Config.DEFAULT_MIN_LIFE_BEFORE_NEEDS_REFILL * 2))) {
+      (spawn.energy < 30 && creep.ticksToLive > Config.DEFAULT_MIN_LIFE_BEFORE_STOP_REFILL)) {
       task = "";
     }
   } else if (task === Task.acquireEnergy) {

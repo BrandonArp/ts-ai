@@ -89,3 +89,22 @@ export function canWork(creep: Creep): boolean {
     return creep.memory.working;
   }
 }
+
+export function registerWalk(creep: Creep): void {
+  let walk;
+  if (creep.room.memory.walk === undefined) {
+    creep.room.memory.walk = new Array(50);
+    walk = creep.room.memory.walk;
+    for (let x = 0; x < 50; x++) {
+      walk[x] = new Array(50);
+      for (let y = 0; y < 50; y++) {
+        walk[x][y] = 0;
+      }
+    }
+  }
+  walk = creep.room.memory.walk;
+  walk[creep.pos.x][creep.pos.y]++;
+  if (walk[creep.pos.x][creep.pos.y] > 100) {
+    walk[creep.pos.x][creep.pos.y] = 100;
+  }
+}

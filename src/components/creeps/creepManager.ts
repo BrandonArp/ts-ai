@@ -93,7 +93,7 @@ function _buildMissingCreeps(room: Room, creeps: Creep[]) {
     });
   } else if (workers.length < harvesters.length - 2) {
     log.info("Wanting to spawn a new worker");
-    bodyParts = [WORK, WORK, CARRY, MOVE];
+    bodyParts = [WORK, CARRY, CARRY, MOVE, MOVE];
     _.each(spawns, (spawn: Spawn) => {
       if (spawn.energy >= computeSpawnCost(bodyParts)) {
         _spawnCreep(spawn, bodyParts, "worker");
@@ -103,7 +103,7 @@ function _buildMissingCreeps(room: Room, creeps: Creep[]) {
     });
   } else if (builders.length < 2) {
     log.info("Wanting to spawn a new builder");
-    bodyParts = [WORK, WORK, CARRY, MOVE];
+    bodyParts = [WORK, CARRY, CARRY, MOVE, MOVE];
     _.each(spawns, (spawn: Spawn) => {
       if (spawn.energy >= computeSpawnCost(bodyParts)) {
         _spawnCreep(spawn, bodyParts, "builder");
