@@ -32,6 +32,11 @@ export function run(creep: Creep): void {
     }
   }
 
+  const structures = creep.room.lookForAt(LOOK_STRUCTURES, creep.pos.x, creep.pos.y);
+  if (structures.length === 0) {
+    creep.room.createConstructionSite(creep.pos.x, creep.pos.y, STRUCTURE_ROAD);
+  }
+
   if (task === Task.renew) {
     creepActions.moveToRenew(creep, spawn);
     if (creep.ticksToLive > 1000 ||

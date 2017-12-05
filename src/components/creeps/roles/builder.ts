@@ -15,7 +15,6 @@ enum Task {
  */
 export function run(creep: Creep): void {
   const spawn = creep.room.find<Spawn>(FIND_MY_SPAWNS)[0];
-  const controller = creep.room.controller;
   const allSites =  creep.room.find<ConstructionSite>(FIND_MY_CONSTRUCTION_SITES);
   let task = creep.memory.task;
 
@@ -26,10 +25,8 @@ export function run(creep: Creep): void {
       task = Task.acquireEnergy;
     } else if (allSites.length > 0) {
       task = Task.build;
-    } else if (controller) {
-      console.log("cannot upgrade controller for " + controller.upgradeBlocked + " ticks");
     } else {
-      console.log("cannot upgrade controller, no controller found");
+      console.log("building has nothing to do, no task valid");
     }
   }
 
