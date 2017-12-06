@@ -113,10 +113,10 @@ function _buildMissingCreeps(room: Room, creeps: Creep[]) {
     });
   }
 
-  if ((workers.length >= harvesters.length + 1 || harvesters.length < 2) && workers.length > 0) {
+  if ((workers.length >= harvesters.length + 1 || harvesters.length < 3) && workers.length > 0) {
     workers[0].memory.role = "harvester";
     workers[0].memory.task = "";
-  } else if ((builders.length >= harvesters.length + 1 || harvesters.length < 2) && builders.length > 0) {
+  } else if ((builders.length >= harvesters.length + 1 || harvesters.length < 4) && builders.length > 0) {
     builders[0].memory.role = "harvester";
     builders[0].memory.task = "";
   }
