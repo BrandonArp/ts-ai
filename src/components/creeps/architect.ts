@@ -1,5 +1,5 @@
 export function plan(room: Room) {
-  const energySources = room.find<Source>(FIND_SOURCES_ACTIVE);
+  const energySources = room.find<Source>(FIND_SOURCES_ACTIVE).sort((a, b) => a.id < b.id ? -1 : 1);
   const spawn = room.find<Spawn>(FIND_MY_SPAWNS)[0];
   const constructionSites = room.find<ConstructionSite>(FIND_MY_CONSTRUCTION_SITES);
 
@@ -53,6 +53,47 @@ export function plan(room: Room) {
         }
       }
     }
+  }
+
+  Memory.phase = "2";
+  for (const source of energySources) {
+    const pos = source.pos;
+    const area = room.lookAtArea(pos.y - 2, pos.x - 2, pos.y + 2, pos.x + 2);
+
+    // Look for places for the creeps to work
+    // Pick 2 or 3 (if colinear)
+    const creepCandidates = [];
+    for (let x = pos.x - 1; x <= pos.x + 1; x++) {
+      for (let y = pos.y - 1; y <= pos.y + 1; y++) {
+        const types: any = area[y][x];
+        let ok = true;
+        for (const type of types) {
+          if (type.type === "terrain") {
+            if (type.terrain === "wall") {
+              ok = false;
+            }
+          } else if (type.type === "structure") {
+            console.log("found structure", type.structure);
+          } else {
+            console.log("found unknown type", type);
+          }
+        }
+        if (ok) {
+          creepCandidates.push({x: x, y: y});
+        }
+      }
+    }
+    console.log("candidates", creepCandidates);
+    _.each(creepCandidates, (c) => {
+      console.log("candidate " + c.x + ", " + c.y);
+      room.visual.circle(c.x, c.y);
+    });
+
+    // for (let x = pos.x - 2; x <= pos.x + 2; x++) {
+    //   for (let y = pos.y - 2; y <= pos.y + 2; y++) {
+    //     var types = area[y][x];
+    //   }
+    // }
   }
 
   if (pending < maxPlanned && highest > 10 && highestPos != null) {

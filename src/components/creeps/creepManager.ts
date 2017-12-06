@@ -15,11 +15,11 @@ import { log } from "../../lib/logger/log";
  */
 export function run(room: Room): void {
   const creeps = room.find<Creep>(FIND_MY_CREEPS);
-  const creepCount = _.size(creeps);
+  // const creepCount = _.size(creeps);
 
-  if (Config.ENABLE_DEBUG_MODE) {
-    log.info(creepCount + " creeps found in the playground.");
-  }
+  // if (Config.ENABLE_DEBUG_MODE) {
+  //   log.info(creepCount + " creeps found in the playground.");
+  // }
 
   _buildMissingCreeps(room, creeps);
 
@@ -70,11 +70,11 @@ function _buildMissingCreeps(room: Room, creeps: Creep[]) {
     },
   });
 
-  if (Config.ENABLE_DEBUG_MODE) {
-    if (spawns[0]) {
-      log.info("Spawn: " + spawns[0].name);
-    }
-  }
+  // if (Config.ENABLE_DEBUG_MODE) {
+  //   if (spawns[0]) {
+  //     log.info("Spawn: " + spawns[0].name);
+  //   }
+  // }
 
   if (harvesters.length < energySources.length * 4) {
     log.info("Wanting to spawn a new harvester");
