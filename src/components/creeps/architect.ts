@@ -66,6 +66,9 @@ export function plan(room: Room) {
     for (let x = pos.x - 1; x <= pos.x + 1; x++) {
       for (let y = pos.y - 1; y <= pos.y + 1; y++) {
         const types: any = area[y][x];
+        types.prospect = -100;
+        types.x = x;
+        types.y = y;
         let ok = true;
         for (const type of types) {
           if (type.type === "terrain") {
@@ -75,7 +78,7 @@ export function plan(room: Room) {
           } else if (type.type === "structure") {
             console.log("found structure", type.structure);
           } else {
-            console.log("found unknown type", type);
+            console.log("found unknown type", type.type);
           }
         }
         if (ok) {
@@ -83,11 +86,31 @@ export function plan(room: Room) {
         }
       }
     }
-    console.log("candidates", creepCandidates);
+
+    const sites: any[] = [];
     _.each(creepCandidates, (c) => {
-      console.log("candidate " + c.x + ", " + c.y);
       room.visual.circle(c.x, c.y);
+      for (let xx = c.x - 1; xx <= c.x + 1; xx++) {
+        for (let yy = c.y - 1; yy <= c.y + 1; yy++) {
+          const site: any = area[yy][xx];
+          site.x = xx;
+          site.y = yy;
+          if (site.prospect === undefined || site.prospect === null) {
+            site.prospect = 0;
+          }
+          site.prospect++;
+          sites.push(site);
+        }
+      }
     });
+
+    sites.sort((a, b) => a.prospect < b.prospect ? 1 : -1);
+
+    if (sites.length > 0) {
+      const buildHere = sites[0];
+      room.visual.circle(buildHere.x, buildHere.y);
+      room.createConstructionSite(buildHere.x, buildHere.y, STRUCTURE_CONTAINER);
+    }
 
     // for (let x = pos.x - 2; x <= pos.x + 2; x++) {
     //   for (let y = pos.y - 2; y <= pos.y + 2; y++) {
